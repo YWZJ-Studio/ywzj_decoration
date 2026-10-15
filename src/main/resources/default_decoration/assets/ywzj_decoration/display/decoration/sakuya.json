@@ -1,0 +1,7 @@
+{
+	"slot_texture": "ywzj_decoration:textures/slot/sakuya.png",
+	"model": "ywzj_decoration:decoration/sakuya",
+	"texture": "ywzj_decoration:textures/decoration/sakuya.png",
+	"animations": "ywzj_decoration:decoration/sakuya.animation",
+	"description": "十六夜咲夜FUMO"
+}

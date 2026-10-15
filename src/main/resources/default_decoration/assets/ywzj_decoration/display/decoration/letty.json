@@ -1,0 +1,7 @@
+{
+	"slot_texture": "ywzj_decoration:textures/slot/letty.png",
+	"model": "ywzj_decoration:decoration/letty",
+	"texture": "ywzj_decoration:textures/decoration/letty.png",
+	"animations": "ywzj_decoration:decoration/letty.animation",
+	"description": "蕾蒂FUMO"
+}

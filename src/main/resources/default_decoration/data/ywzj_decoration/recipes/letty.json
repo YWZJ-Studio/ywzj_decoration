@@ -1,0 +1,20 @@
+{
+  "type": "ywzj_decoration:sewing",
+  "materials": [
+    {
+      "item": "minecraft:light_blue_wool",
+      "count": 4
+    },
+    {
+      "item": "minecraft:string",
+      "count": 2
+    },
+    {
+      "item": "minecraft:light_blue_dye",
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "ywzj_decoration:letty"
+  }
+}

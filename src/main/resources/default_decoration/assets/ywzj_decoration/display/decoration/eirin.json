@@ -1,0 +1,7 @@
+{
+  "slot_texture": "ywzj_decoration:textures/slot/eirin.png",
+  "model": "ywzj_decoration:decoration/eirin",
+  "texture": "ywzj_decoration:textures/decoration/eirin.png",
+  "animations": "ywzj_decoration:decoration/eirin.animation",
+  "description": "八意永琳FUMO"
+}

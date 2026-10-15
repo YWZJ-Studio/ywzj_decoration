@@ -1,0 +1,10 @@
+{
+    "namespace": "ywzj_decoration",
+    "title": "decoration_pack.ywzj_decoration",
+    "description": "decoration_pack.ywzj_decoration.desc",
+    "version": "0.0.8",
+    "date": "2026-10-14",
+    "license": "All Rights Reserved",
+    "authors": ["YWZJ"],
+    "dependencies": {}
+}

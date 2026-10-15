@@ -1,0 +1,7 @@
+{
+  "slot_texture": "ywzj_decoration:textures/slot/kaguya.png",
+  "model": "ywzj_decoration:decoration/kaguya",
+  "texture": "ywzj_decoration:textures/decoration/kaguya.png",
+  "animations": "ywzj_decoration:decoration/kaguya.animation",
+  "description": "蓬莱山辉夜FUMO"
+}

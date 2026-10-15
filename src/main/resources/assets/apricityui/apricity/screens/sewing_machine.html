@@ -1,0 +1,130 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="aui-font-mode" content="web">
+    <meta name="aui-viewport" content="mode=browser,width=1100">
+    <link rel="stylesheet" href="/apricityui/theme/ore/ore.css">
+    <style>
+        html, body { width:100%; height:100%; min-height:0; margin:0; overflow:hidden; }
+        .machine-screen {
+            color:var(--ore-ink); background:var(--ore-canvas);
+            font-family:OreRegular,"Microsoft YaHei"; display:flex; flex-direction:column;
+        }
+        .machine-screen .machine-navbar { min-height:54px; padding:8px 12px 12px; flex:0 0 auto; }
+        .machine-screen .navbar-brand { font-size:22px; }
+        .machine-workspace {
+            width:100%; padding:12px; box-sizing:border-box; flex:1 1 auto; min-height:0;
+            display:flex; gap:12px;
+        }
+        .machine-screen .machine-panel { min-width:0; min-height:0; display:flex; flex-direction:column; }
+        .machine-screen .card-header { min-height:42px; padding:10px 12px; font-size:18px; flex:0 0 auto; }
+        .machine-screen .card-body { min-height:0; padding:10px; flex:1 1 auto; }
+        .machine-screen .card-footer { padding:12px; flex:0 0 auto; }
+        .catalog-panel { width:25%; flex:0 0 25%; }
+        .catalog-panel .card-body { display:flex; flex-direction:column; gap:8px; }
+        .machine-screen .form-input { min-height:38px; padding:7px 9px; border-width:2px; font-size:16px; flex:0 0 auto; }
+        .recipe-list { min-height:0; border-width:2px; overflow-x:hidden; overflow-y:auto; flex:1 1 auto; }
+        .machine-screen .recipe-entry {
+            min-height:44px; padding:8px 10px; gap:4px; cursor:pointer;
+            flex-direction:column; align-items:flex-start; justify-content:center;
+        }
+        .recipe-entry-name { width:100%; color:#fff; font-size:18px; line-height:1.2; white-space:nowrap; overflow:hidden; }
+        .empty-state { padding:12px 8px; color:var(--ore-ink-muted); font-size:16px; text-align:center; }
+        .hidden { display:none; }
+        .preview-panel { flex:1 1 auto; }
+        .preview-panel .card-body { position:relative; padding:0; background:#252628; overflow:hidden; }
+        .preview-viewport {
+            position:absolute; top:10px; right:10px; bottom:10px; left:10px;
+            border:2px solid #56585b; background:#303133;
+        }
+        #decoration-preview {
+            position:absolute; top:12px; right:12px; bottom:12px; left:12px;
+            cursor:grab; user-select:none;
+        }
+        #decoration-preview.dragging { cursor:grabbing; }
+        #selected-name { min-width:0; color:#fff; font-size:20px; white-space:nowrap; overflow:hidden; }
+        .output-area { display:flex; align-items:center; justify-content:center; gap:14px; }
+        .fabrication-panel .output-area { margin-bottom:14px; }
+        .machine-screen .output-button {
+            width:54px; height:54px; min-width:54px; flex:0 0 54px; padding:0; margin:0;
+            display:block; border:0; background:transparent; cursor:pointer;
+        }
+        .machine-screen .output-button:hover { outline:2px solid var(--ore-gold); }
+        .machine-screen .output-button[disabled] { cursor:default; outline:none; }
+        .output-slot {
+            display:block; width:54px; height:54px;
+            --aui-slot-size:54; --aui-slot-icon-scale:3; pointer-events:none;
+        }
+        .output-slot > item { width:48px; height:48px; left:3px; top:3px; }
+        .output-label { color:var(--ore-gold); font-size:18px; }
+        .fabrication-panel { width:34%; flex:0 0 34%; }
+        .fabrication-panel .card-body { display:flex; flex-direction:column; gap:10px; }
+        .section-label { color:var(--ore-ink-muted); font-size:14px; flex:0 0 auto; }
+        .requirements {
+            overflow-x:hidden; overflow-y:auto; display:grid;
+            grid-template-columns:1; align-content:start; gap:6px; flex:1 1 auto;
+        }
+        .material-row {
+            min-height:48px; min-width:0; padding:4px 5px; border:2px solid var(--ore-edge);
+            background:#3b3c3e; display:flex; align-items:center; gap:8px;
+        }
+        .requirement-slot {
+            width:34px; height:34px; min-width:34px; flex:0 0 34px;
+            --aui-slot-size:34; --aui-slot-icon-scale:2;
+        }
+        .requirement-slot > ingredient { width:32px; height:32px; left:1px; top:1px; }
+        .requirement-slot ingredient > item { width:32px; height:32px; left:0; top:0; }
+        .material-copy { min-width:0; flex:1 1 auto; }
+        .material-name { color:#fff; font-size:16px; white-space:nowrap; overflow:hidden; }
+        .material-count { color:var(--ore-gold); font-size:16px; flex:0 0 auto; white-space:nowrap; }
+        .material-count.missing { color:#ffb0a7; }
+        .machine-screen .craft-button { width:100%; min-height:44px; padding:8px 10px 12px; font-size:18px; }
+        .machine-screen .close-button { width:34px; height:32px; min-height:32px; padding:4px 7px 8px; font-size:16px; flex:0 0 34px; }
+    </style>
+</head>
+<body class="ore-theme machine-screen">
+    <nav class="navbar machine-navbar">
+        <div class="navbar-brand"><translation>block.ywzj_decoration.sewing_machine</translation></div>
+        <button id="close-button" class="button button-danger close-button" type="button">X</button>
+    </nav>
+    <main class="machine-workspace">
+        <aside class="card card-accent-green machine-panel catalog-panel">
+            <div class="card-header split">
+                <span><translation>screen.sewing_machine.recipes</translation></span>
+                <span id="recipe-count" class="badge">0</span>
+            </div>
+            <div class="card-body">
+                <input id="recipe-search" class="form-input" type="text">
+                <div id="recipe-list" class="list-group recipe-list"></div>
+                <div id="recipe-empty" class="empty-state hidden"><translation>screen.sewing_machine.no_results</translation></div>
+            </div>
+        </aside>
+        <section class="card card-accent-purple machine-panel preview-panel">
+            <div class="card-header" id="selected-name"><translation>screen.sewing_machine.select_recipe</translation></div>
+            <div class="card-body">
+                <div class="preview-viewport"><div id="decoration-preview"></div></div>
+            </div>
+        </section>
+        <aside class="card card-accent-gold machine-panel fabrication-panel">
+            <div class="card-header"><translation>screen.sewing_machine.materials</translation></div>
+            <div class="card-body">
+                <div class="section-label"><translation>screen.sewing_machine.owned_required</translation></div>
+                <div id="materials" class="requirements"></div>
+                <div id="materials-empty" class="empty-state hidden"><translation>screen.sewing_machine.select_recipe</translation></div>
+            </div>
+            <div class="card-footer">
+                <div class="output-area">
+                    <button id="output-button" class="output-button" type="button" disabled="true">
+                        <slot class="output-slot" size="54"><item id="output-item">minecraft:air</item></slot>
+                    </button>
+                    <div class="output-label"><translation>screen.sewing_machine.output</translation></div>
+                </div>
+                <button id="craft-button" class="button button-primary craft-button" type="button" disabled="true">
+                    <translation>screen.sewing_machine.craft</translation>
+                </button>
+            </div>
+        </aside>
+    </main>
+</body>
+</html>

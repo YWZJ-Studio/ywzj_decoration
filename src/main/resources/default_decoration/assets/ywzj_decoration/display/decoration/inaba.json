@@ -1,0 +1,7 @@
+{
+  "slot_texture": "ywzj_decoration:textures/slot/inaba.png",
+  "model": "ywzj_decoration:decoration/inaba",
+  "texture": "ywzj_decoration:textures/decoration/inaba.png",
+  "animations": "ywzj_decoration:decoration/inaba.animation",
+  "description": "因幡帝FUMO"
+}

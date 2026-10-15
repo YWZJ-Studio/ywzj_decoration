@@ -1,0 +1,7 @@
+{
+	"slot_texture": "ywzj_decoration:textures/slot/meiling.png",
+	"model": "ywzj_decoration:decoration/meiling",
+	"texture": "ywzj_decoration:textures/decoration/meiling.png",
+	"animations": "ywzj_decoration:decoration/meiling.animation",
+	"description": "红美铃FUMO"
+}

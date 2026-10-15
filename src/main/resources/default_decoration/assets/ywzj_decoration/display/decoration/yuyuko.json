@@ -1,0 +1,7 @@
+{
+  "slot_texture": "ywzj_decoration:textures/slot/yuyuko.png",
+  "model": "ywzj_decoration:decoration/yuyuko",
+  "texture": "ywzj_decoration:textures/decoration/yuyuko.png",
+  "animations": "ywzj_decoration:decoration/yuyuko.animation",
+  "description": "西行寺幽幽子FUMO"
+}

@@ -1,0 +1,7 @@
+{
+	"slot_texture": "ywzj_decoration:textures/slot/satsuki.png",
+	"model": "ywzj_decoration:decoration/satsuki",
+	"texture": "ywzj_decoration:textures/decoration/satsuki.png",
+	"animations": "ywzj_decoration:decoration/satsuki.animation",
+	"description": "冴月麟FUMO"
+}

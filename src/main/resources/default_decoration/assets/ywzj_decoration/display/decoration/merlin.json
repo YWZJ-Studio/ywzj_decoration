@@ -1,0 +1,7 @@
+{
+  "slot_texture": "ywzj_decoration:textures/slot/merlin.png",
+  "model": "ywzj_decoration:decoration/merlin",
+  "texture": "ywzj_decoration:textures/decoration/merlin.png",
+  "animations": "ywzj_decoration:decoration/merlin.animation",
+  "description": "梅露兰FUMO"
+}

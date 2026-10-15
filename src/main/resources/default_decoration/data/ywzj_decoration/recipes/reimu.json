@@ -1,0 +1,20 @@
+{
+  "type": "ywzj_decoration:sewing",
+  "materials": [
+    {
+      "item": "minecraft:red_wool",
+      "count": 4
+    },
+    {
+      "item": "minecraft:string",
+      "count": 2
+    },
+    {
+      "item": "minecraft:red_dye",
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "ywzj_decoration:reimu"
+  }
+}

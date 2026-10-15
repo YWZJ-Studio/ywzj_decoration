@@ -1,0 +1,7 @@
+{
+	"slot_texture": "ywzj_decoration:textures/slot/patchouli.png",
+	"model": "ywzj_decoration:decoration/patchouli",
+	"texture": "ywzj_decoration:textures/decoration/patchouli.png",
+	"animations": "ywzj_decoration:decoration/patchouli.animation",
+	"description": "帕秋莉FUMO"
+}

@@ -1,0 +1,7 @@
+{
+  "slot_texture": "ywzj_decoration:textures/slot/yukari.png",
+  "model": "ywzj_decoration:decoration/yukari",
+  "texture": "ywzj_decoration:textures/decoration/yukari.png",
+  "animations": "ywzj_decoration:decoration/yukari.animation",
+  "description": "八云紫FUMO"
+}

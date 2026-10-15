@@ -1,0 +1,7 @@
+{
+	"slot_texture": "ywzj_decoration:textures/slot/koakuma.png",
+	"model": "ywzj_decoration:decoration/koakuma",
+	"texture": "ywzj_decoration:textures/decoration/koakuma.png",
+	"animations": "ywzj_decoration:decoration/koakuma.animation",
+	"description": "小恶魔FUMO"
+}

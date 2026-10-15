@@ -1,0 +1,7 @@
+{
+  "slot_texture": "ywzj_decoration:textures/slot/reisen.png",
+  "model": "ywzj_decoration:decoration/reisen",
+  "texture": "ywzj_decoration:textures/decoration/reisen.png",
+  "animations": "ywzj_decoration:decoration/reisen.animation",
+  "description": "铃仙FUMO"
+}

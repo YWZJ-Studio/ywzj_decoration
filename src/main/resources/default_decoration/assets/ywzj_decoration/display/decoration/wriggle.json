@@ -1,0 +1,7 @@
+{
+  "slot_texture": "ywzj_decoration:textures/slot/wriggle.png",
+  "model": "ywzj_decoration:decoration/wriggle",
+  "texture": "ywzj_decoration:textures/decoration/wriggle.png",
+  "animations": "ywzj_decoration:decoration/wriggle.animation",
+  "description": "莉格露FUMO"
+}

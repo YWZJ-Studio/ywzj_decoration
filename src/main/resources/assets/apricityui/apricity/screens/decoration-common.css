@@ -1,0 +1,97 @@
+html,
+body {
+    user-select: none;
+}
+
+.ore-theme {
+    --ore-canvas: transparent;
+    --ore-surface: rgba(72, 73, 74, 0.80);
+    --ore-surface-deep: rgba(49, 50, 51, 0.82);
+    --ore-surface-soft: rgba(208, 209, 212, 0.88);
+    --ore-font-sm: 15px;
+    --ore-font-md: 19px;
+    --ore-font-lg: 24px;
+    --ore-font-xl: 34px;
+}
+
+body.ore-theme {
+    background: var(--ore-canvas);
+}
+
+.ore-theme .navbar {
+    min-height: 42px;
+    background: rgba(230, 232, 235, 0.84);
+}
+
+body.ore-theme.decoration-settings-screen .navbar-brand {
+    font-size: 22px;
+}
+
+.ore-theme .card,
+.ore-theme .panel {
+    background: var(--ore-surface);
+}
+
+.ore-theme .card-header,
+.ore-theme .panel-header {
+    min-height: 32px;
+    background: var(--ore-surface-deep);
+    font-size: 13px;
+}
+
+.ore-theme .form-input,
+.ore-theme .form-select,
+.ore-theme .form-textarea {
+    background: var(--ore-surface-deep);
+}
+
+.ore-theme .badge {
+    font-size: 14px;
+}
+
+.ore-theme .preview-panel {
+    background: rgba(37, 38, 40, 0.58);
+    user-select: none;
+}
+
+.ore-theme .preview-panel .card-body {
+    background: transparent;
+}
+
+.ore-theme .preview-viewport {
+    background: rgba(48, 49, 51, 0.35);
+}
+
+.ore-theme .close-button,
+.ore-theme #close-button {
+    width: 34px;
+    height: 32px;
+    min-height: 32px;
+    padding: 3px 7px 6px;
+    font-size: 17px;
+    flex-basis: 34px;
+}
+
+.ore-theme .form-input {
+    font-size: 14px;
+}
+
+.ore-theme .setting-label {
+    font-size: 17px;
+}
+
+.ore-theme .setting-input,
+.ore-theme .range-value-input {
+    font-size: 17px;
+}
+
+.ore-theme .button-row .button {
+    min-height: 38px;
+    font-size: 14px;
+}
+
+.ore-theme .decoration-name {
+    color: #ffffff;
+    font-family: OreDisplay, "Microsoft YaHei";
+    font-size: 17px;
+}

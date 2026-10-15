@@ -1,0 +1,7 @@
+{
+  "slot_texture": "ywzj_decoration:textures/slot/mystia.png",
+  "model": "ywzj_decoration:decoration/mystia",
+  "texture": "ywzj_decoration:textures/decoration/mystia.png",
+  "animations": "ywzj_decoration:decoration/mystia.animation",
+  "description": "米斯蒂娅FUMO"
+}

@@ -1,0 +1,7 @@
+{
+	"slot_texture": "ywzj_decoration:textures/slot/lilywhite.png",
+	"model": "ywzj_decoration:decoration/lilywhite",
+	"texture": "ywzj_decoration:textures/decoration/lilywhite.png",
+	"animations": "ywzj_decoration:decoration/lilywhite.animation",
+	"description": "莉莉霍瓦特FUMO"
+}

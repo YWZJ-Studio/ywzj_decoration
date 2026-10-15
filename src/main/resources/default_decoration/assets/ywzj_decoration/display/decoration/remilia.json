@@ -1,0 +1,7 @@
+{
+	"slot_texture": "ywzj_decoration:textures/slot/remilia.png",
+	"model": "ywzj_decoration:decoration/remilia",
+	"texture": "ywzj_decoration:textures/decoration/remilia.png",
+	"animations": "ywzj_decoration:decoration/remilia.animation",
+	"description": "蕾米莉亚FUMO"
+}

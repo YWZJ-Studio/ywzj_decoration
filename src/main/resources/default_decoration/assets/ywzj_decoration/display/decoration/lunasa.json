@@ -1,0 +1,7 @@
+{
+	"slot_texture": "ywzj_decoration:textures/slot/lunasa.png",
+	"model": "ywzj_decoration:decoration/lunasa",
+	"texture": "ywzj_decoration:textures/decoration/lunasa.png",
+	"animations": "ywzj_decoration:decoration/lunasa.animation",
+	"description": "露娜萨FUMO"
+}

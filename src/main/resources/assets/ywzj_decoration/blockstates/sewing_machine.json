@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": {"model": "ywzj_decoration:block/sewing_machine"},
+    "facing=east": {"model": "ywzj_decoration:block/sewing_machine", "y": 90},
+    "facing=south": {"model": "ywzj_decoration:block/sewing_machine", "y": 180},
+    "facing=west": {"model": "ywzj_decoration:block/sewing_machine", "y": 270}
+  }
+}

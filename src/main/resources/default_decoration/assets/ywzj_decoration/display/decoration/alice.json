@@ -1,0 +1,7 @@
+{
+	"slot_texture": "ywzj_decoration:textures/slot/alice.png",
+	"model": "ywzj_decoration:decoration/alice",
+	"texture": "ywzj_decoration:textures/decoration/alice.png",
+	"animations": "ywzj_decoration:decoration/alice.animation",
+	"description": "爱丽丝FUMO"
+}

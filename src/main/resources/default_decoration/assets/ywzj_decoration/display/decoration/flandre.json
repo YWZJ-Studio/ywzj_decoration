@@ -1,0 +1,7 @@
+{
+	"slot_texture": "ywzj_decoration:textures/slot/flandre.png",
+	"model": "ywzj_decoration:decoration/flandre",
+	"texture": "ywzj_decoration:textures/decoration/flandre.png",
+	"animations": "ywzj_decoration:decoration/flandre.animation",
+	"description": "芙兰朵露FUMO"
+}
