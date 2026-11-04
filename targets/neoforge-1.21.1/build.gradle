@@ -1,0 +1,102 @@
+plugins {
+    id 'java-library'
+    id 'net.neoforged.moddev' version '2.0.141'
+    id 'me.modmuss50.mod-publish-plugin' version '2.1.1'
+}
+
+apply from: file('../../gradle/target-conventions/shared.gradle')
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
+}
+
+commonJava {
+    // Confirmed 1.20.1 -> 1.21.1 differences: BlockEntity save/load signatures,
+    // item data components, RecipeInput/RecipeHolder and the recipe lookup used
+    // by the sewing packet. Target implementations replace these files.
+    exclude 'org/ywzj/decoration/block/DecorationBlock.java'
+    exclude 'org/ywzj/decoration/block/SewingMachineBlock.java'
+    exclude 'org/ywzj/decoration/blockentity/DecorationBlockEntity.java'
+    exclude 'org/ywzj/decoration/blockentity/SewingMachineBlockEntity.java'
+    exclude 'org/ywzj/decoration/item/PlainTextureItem.java'
+    exclude 'org/ywzj/decoration/recipe/SewingRecipe.java'
+    exclude 'org/ywzj/decoration/network/message/ClientSewingAction.java'
+}
+
+tasks.named('sourcesJar', Jar).configure {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+neoForge {
+    version = neoforge_121_version
+
+    runs {
+        client {
+            client()
+            gameDirectory = file('run')
+        }
+
+        server {
+            server()
+            programArgument '--nogui'
+        }
+    }
+
+    mods {
+        "${mod_id}" {
+            sourceSet(sourceSets.main)
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "ProjectLocal"
+        url = layout.projectDirectory.dir('local-repo')
+    }
+    maven {
+        name = "JitPack"
+        url = "https://jitpack.io"
+        content {
+            includeGroup "com.github.mcmodderanchor"
+        }
+    }
+    maven {
+        name = "Sighs"
+        url = "https://maven.sighs.cc/repository/maven-public/"
+    }
+    mavenLocal()
+}
+
+dependencies {
+    compileOnly('com.maydaymemory:mae:1.1.2') {
+        exclude group: 'com.google.code.findbugs', module: 'jsr305'
+        exclude group: 'it.unimi.dsi', module: 'fastutil'
+        exclude group: 'org.joml', module: 'joml'
+    }
+    jarJar(implementation 'com.github.mcmodderanchor:simplebedrockmodel:2.5.7-neoforge-mc1.21.1')
+    jarJar(implementation 'com.sighs:ApricityUI-neoforge-1.21.1:1.2.9.5')
+}
+
+tasks.named('processResources', ProcessResources).configure {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    def replaceProperties = [
+            minecraft_version     : neoforge_121_minecraft_version,
+            neoforge_version      : neoforge_121_version,
+            neoforge_version_range: neoforge_121_version_range,
+            mod_id                : mod_id,
+            mod_name              : mod_name,
+            mod_license           : mod_license,
+            mod_version           : mod_version,
+            mod_authors           : mod_authors,
+            mod_description       : mod_description
+    ]
+    inputs.properties replaceProperties
+    filesMatching('META-INF/neoforge.mods.toml') {
+        expand replaceProperties + [project: project]
+    }
+}
+
+apply from: file('../../gradle/target-conventions/hot-debug.gradle')
+apply from: file('../../gradle/target-conventions/publish.gradle')

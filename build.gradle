@@ -1,169 +1,88 @@
-plugins {
-    id 'idea'
-    id 'java-library'
-    id 'maven-publish'
-    id 'net.neoforged.moddev.legacyforge' version '2.0.91'
+def targetsDirectory = file('targets')
+if (!targetsDirectory.isDirectory()) {
+    throw new GradleException("Targets directory not found: ${targetsDirectory}")
 }
 
-tasks.named('wrapper', Wrapper).configure {
-    distributionType = Wrapper.DistributionType.BIN
-}
-
-version = mod_version
-group = mod_group_id
-
-base {
-    archivesName = "${mod_id}-${minecraft_version}"
-}
-
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-
-legacyForge {
-    version = project.minecraft_version + '-' + project.forge_version
-
-    parchment {
-        mappingsVersion = project.parchment_mappings_version
-        minecraftVersion = project.parchment_minecraft_version
+def targetBuilds = [:]
+targetsDirectory.listFiles().findAll { it.isDirectory() }.sort { it.name }.each { directory ->
+    def descriptor = new File(directory, 'ci.properties')
+    if (!descriptor.isFile() || !new File(directory, 'gradlew.bat').isFile()) {
+        throw new GradleException("Target '${directory.name}' requires ci.properties and gradlew.bat.")
     }
-
-    runs {
-        client {
-            client()
-            gameDirectory = project.file('run/client_1')
-            jvmArgument '-XX:+AllowEnhancedClassRedefinition'
-            jvmArgument '-Xmx4g'
-            systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
-        }
-
-        client2 {
-            client()
-            gameDirectory = project.file('run/client_2')
-            programArgument '--username'
-            programArgument 'Ranpoes'
-            systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
-        }
-
-        server {
-            server()
-            gameDirectory = project.file('run/server')
-            systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
-        }
-
-        data {
-            data()
-            gameDirectory = project.file('run-data')
-            programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
-        }
-
-        configureEach {
-            systemProperty 'forge.logging.markers', 'REGISTRIES'
-            logLevel = org.slf4j.event.Level.DEBUG
+    def properties = [:]
+    descriptor.eachLine('UTF-8') { line ->
+        def entry = line.trim()
+        if (entry && !entry.startsWith('#') && !entry.startsWith(';')) {
+            def separator = entry.indexOf('=')
+            if (separator < 1) {
+                throw new GradleException("Invalid ci.properties entry in ${directory.name}: ${entry}")
+            }
+            def key = entry.substring(0, separator).trim()
+            if (properties.containsKey(key)) {
+                throw new GradleException("Duplicate ci.properties key '${key}' in ${directory.name}")
+            }
+            properties[key] = entry.substring(separator + 1).trim()
         }
     }
-
-    mods {
-        "${mod_id}" {
-            sourceSet sourceSets.main
+    def enabled = properties.get('ci.enabled', 'true').toLowerCase(Locale.ROOT)
+    if (!(enabled in ['true', 'false'])) {
+        throw new GradleException("Target '${directory.name}' has invalid ci.enabled '${enabled}'.")
+    }
+    if (enabled == 'true') {
+        def javaVersion = properties['ci.java']
+        if (javaVersion == null || !(javaVersion ==~ /[1-9][0-9]*/) || !javaVersion.isInteger()) {
+            throw new GradleException("Target '${directory.name}' requires a positive integer ci.java value.")
         }
+        targetBuilds[directory.name] = [task: "buildTarget-${directory.name}", java: javaVersion.toInteger()]
     }
 }
 
-sourceSets.main.resources { srcDir 'src/generated/resources' }
+def currentJava = JavaVersion.current().majorVersion.toInteger()
 
-repositories {
-    mavenCentral()
-    maven {
-        url 'https://api.modrinth.com/maven'
-    }
-    maven {
-        url 'https://jitpack.io'
-        content {
-            includeGroup 'com.github.mcmodderanchor'
-        }
-    }
-    maven {
-        url 'https://maven.sighs.cc/repository/maven-public/'
-    }
-    mavenLocal()
+def selectedTarget = providers.gradleProperty('target').orNull
+def buildAllTargets = providers.gradleProperty('allTargets').map { it.toBoolean() }.getOrElse(false)
+
+if (selectedTarget != null && !targetBuilds.containsKey(selectedTarget)) {
+    throw new GradleException("Unknown target '${selectedTarget}'. Available targets: ${targetBuilds.keySet().join(', ')}")
+}
+if (selectedTarget != null && buildAllTargets) {
+    throw new GradleException('Choose either -Ptarget=<name> or -PallTargets=true, not both.')
 }
 
-dependencies {
-    jarJar(modImplementation('com.github.mcmodderanchor:simplebedrockmodel:2.5.1-forge-mc1.20.1')) {
-        version {
-            strictly '[2.5.1-forge-mc1.20.1,)'
-            prefer '2.5.1-forge-mc1.20.1'
-        }
-    }
-    compileOnly('com.maydaymemory:mae:1.1.2') {
-        exclude group: 'com.google.code.findbugs', module: 'jsr305'
-        exclude group: 'it.unimi.dsi', module: 'fastutil'
-        exclude group: 'org.joml', module: 'joml'
-    }
-    jarJar(modImplementation 'com.sighs:ApricityUI-forge-1.20.1:1.2.4') {
-        version {
-            strictly '[1.2.4,)'
-            prefer '1.2.4'
-        }
-    }
-
-}
-
-var generateModMetadata = tasks.register('generateModMetadata', ProcessResources) {
-    var replaceProperties = [
-            minecraft_version      : minecraft_version,
-            minecraft_version_range: minecraft_version_range,
-            forge_version          : forge_version,
-            forge_version_range    : forge_version_range,
-            loader_version_range   : loader_version_range,
-            mod_id                 : mod_id,
-            mod_name               : mod_name,
-            mod_license            : mod_license,
-            mod_version            : mod_version,
-            mod_authors            : mod_authors,
-            mod_description        : mod_description
-    ]
-    inputs.properties replaceProperties
-    expand replaceProperties
-    from 'src/main/templates'
-    into 'build/generated/sources/modMetadata'
-}
-sourceSets.main.resources.srcDir generateModMetadata
-legacyForge.ideSyncTask generateModMetadata
-
-tasks.named('jar', Jar).configure {
-    manifest {
-        attributes([
-                'Specification-Title'     : mod_id,
-                'Specification-Vendor'    : mod_authors,
-                'Specification-Version'   : '1',
-                'Implementation-Title'    : project.name,
-                'Implementation-Version'  : project.jar.archiveVersion,
-                'Implementation-Vendor'   : mod_authors,
-                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
-}
-
-publishing {
-    publications {
-        register('mavenJava', MavenPublication) {
-            from components.java
-        }
-    }
-    repositories {
-        maven {
-            url "file://${project.projectDir}/mcmodsrepo"
+def windows = System.getProperty('os.name').toLowerCase().contains('windows')
+targetBuilds.each { targetName, targetBuild ->
+    tasks.register(targetBuild.task, Exec) {
+        group = 'build'
+        description = "Builds ${targetName} using its own Gradle wrapper."
+        workingDir file("targets/${targetName}")
+        environment 'JAVA_HOME', System.getProperty('java.home')
+        commandLine(windows ? ['cmd', '/c', 'gradlew.bat', 'build', '--console', 'plain', '--no-daemon'] :
+                ['sh', './gradlew', 'build', '--console', 'plain', '--no-daemon'])
+        doFirst {
+            if (JavaVersion.current().majorVersion.toInteger() < targetBuild.java) {
+                throw new GradleException("${targetName} requires JDK ${targetBuild.java} or newer; build it independently with its own wrapper and JDK.")
+            }
         }
     }
 }
 
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8'
-}
-
-idea {
-    module {
-        downloadSources = true
-        downloadJavadoc = true
+tasks.register('build') {
+    group = 'build'
+    description = 'Builds common, a discovered target, or all enabled targets whose declared JDK requirement is met.'
+    if (buildAllTargets) {
+        def compatibleTargets = targetBuilds.findAll { name, target -> target.java <= currentJava }
+        if (compatibleTargets.isEmpty()) {
+            throw new GradleException("No enabled targets can be built with JDK ${currentJava}.")
+        }
+        targetBuilds.findAll { name, target -> target.java > currentJava }.each { name, target ->
+            logger.lifecycle("Skipping ${name}: requires JDK ${target.java}, current JDK is ${currentJava}.")
+        }
+        compatibleTargets.each { name, target ->
+            dependsOn tasks.named(target.task)
+        }
+    } else if (selectedTarget != null) {
+        dependsOn tasks.named(targetBuilds[selectedTarget].task)
+    } else {
+        dependsOn gradle.includedBuild('common').task(':build')
     }
 }
